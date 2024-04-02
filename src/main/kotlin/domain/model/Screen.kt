@@ -1,6 +1,7 @@
 package domain.model
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -17,5 +18,9 @@ enum class Screen(
         label = "Patients",
         icon = Icons.Filled.Face
     ),
+    UserScreen(
+        label = "User",
+        icon = Icons.Filled.AccountCircle
+    )
 
 }

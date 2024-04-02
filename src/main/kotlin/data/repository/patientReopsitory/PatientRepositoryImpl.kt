@@ -3,31 +3,31 @@ package data.repository.patientReopsitory
 import domain.model.Patient
 import domain.repository.patientReopsitory.PatientRepository
 
-class PatientRepositoryImpl : PatientRepository {
-    private val patients = mutableListOf<Patient>()
+class PatientRepositoryImpl constructor(private val db:IHMSDB): PatientRepository {
+
 
     override fun getAllPatients(): List<Patient> {
-        return patients.toList()
+        return db.patients.toList()
     }
 
     override fun getPatientById(id: String): Patient? {
-        return patients.find { it.id == id }
+        return db.patients.find { patient -> patient.id == id }
     }
 
     override fun addPatient(patient: Patient) {
-        if (!patients.any { it.id == patient.id }) {
-            patients.add(patient)
+        if (!db.patients.any { it.id == patient.id }) {
+            db.patients.add(patient)
         }
     }
 
     override fun updatePatient(patient: Patient) {
-        val index = patients.indexOfFirst { it.id == patient.id }
+        val index = db.patients.indexOfFirst { it.id == patient.id }
         if (index != -1) {
-            patients[index] = patient
+            db.patients[index] = patient
         }
     }
 
     override fun deletePatient(id: String) {
-        patients.removeAll { it.id == id }
+        db.patients.removeAll { it.id == id }
     }
 }

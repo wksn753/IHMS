@@ -21,24 +21,30 @@ import ui.navigation.composable
 import ui.screens.HomeScreen.HomeScreen
 import ui.screens.PatientsScreen.PatientsScreen
 import androidx.compose.ui.Modifier
+import data.repository.patientReopsitory.IHMSDB
 import data.repository.patientReopsitory.PatientRepositoryImpl
+import data.repository.userRepository.UserRepositoryImpl
 import domain.model.Screen
 import domain.repository.patientReopsitory.PatientRepository
+import domain.repository.patientReopsitory.UserFactory
+import ui.IHMSTheme
 import ui.navigation.rememberNavController
 import ui.screens.PatientsScreen.patientScreenController.PatientScreenController
+import ui.screens.UsersScreen.UserController
+import ui.screens.UsersScreen.UsersScreen
 
 @Composable
 @Preview
 fun App() {
-    val patientRepository: PatientRepository = PatientRepositoryImpl()
+    val patientRepository: PatientRepository = PatientRepositoryImpl(IHMSDB)
     val allPatients = patientRepository.getAllPatients()
-    val screens = Screen.values().toList()
+    val screens = Screen.entries.toList()
     val navController by rememberNavController(Screen.HomeScreen.name)
     val currentScreen by remember {
         navController.currentScreen
     }
 
-    MaterialTheme {
+    IHMSTheme {
         Surface(
             modifier = Modifier.background(color = MaterialTheme.colors.background)
         ) {
@@ -87,6 +93,14 @@ fun CustomNavigationHost(
     NavigationHost(navController) {
         composable(Screen.HomeScreen.name) {
             HomeScreen(navController = navController)
+        }
+        composable(Screen.UserScreen.name){
+            val userRepository = UserRepositoryImpl(IHMSDB)
+            val userFactory = UserFactory()
+            val userController = UserController(userFactory = userFactory, userRepositoryImpl = userRepository)
+            val usersScreenState by userController.userScreenState.collectAsState()
+            val users = usersScreenState.users
+            UsersScreen(navController = navController, users = users, addAdmin = {userController.addAdmin(it)}, addUser = {userController.addMember(it)}, onUserClicked = {})
         }
         composable(Screen.PatientScreen.name){
             val patitentScreenController = PatientScreenController(patientRepository = patientRepository)
