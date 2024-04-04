@@ -24,6 +24,10 @@ import androidx.compose.ui.Modifier
 import data.repository.patientReopsitory.PatientRepositoryImpl
 import domain.model.Screen
 import domain.repository.patientReopsitory.PatientRepository
+import facade.BillingAndPatientsRecordsScreen
+import facade.BillingSystem
+import facade.HospitalInformationManager
+import facade.PatientRecordsSystem
 import ui.navigation.rememberNavController
 import ui.screens.PatientsScreen.patientScreenController.PatientScreenController
 
@@ -87,6 +91,12 @@ fun CustomNavigationHost(
     NavigationHost(navController) {
         composable(Screen.HomeScreen.name) {
             HomeScreen(navController = navController)
+        }
+        composable(Screen.BillingAndRecords.name) {
+            BillingAndPatientsRecordsScreen(manager = HospitalInformationManager(
+                billingSystem = BillingSystem(),
+                patientRecordsSystem = PatientRecordsSystem()
+            ))
         }
         composable(Screen.PatientScreen.name){
             val patitentScreenController = PatientScreenController(patientRepository = patientRepository)
