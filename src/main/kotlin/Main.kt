@@ -4,33 +4,30 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import domain.model.Patient
 import ui.navigation.NavController
 import ui.navigation.NavigationHost
 import ui.navigation.composable
 import ui.screens.HomeScreen.HomeScreen
 import ui.screens.PatientsScreen.PatientsScreen
 import androidx.compose.ui.Modifier
+import data.repository.patientReopsitory.InsurancePatientsRecordsImp
 import data.repository.patientReopsitory.PatientRepositoryImpl
 import domain.model.Screen
+import domain.repository.patientReopsitory.PatientDecorator
 import domain.repository.patientReopsitory.PatientRepository
 import ui.navigation.rememberNavController
+import ui.screens.Insurance.InsuranceScreen
 import ui.screens.PatientsScreen.patientScreenController.PatientScreenController
 
 @Composable
 @Preview
 fun App() {
     val patientRepository: PatientRepository = PatientRepositoryImpl()
+    val patientDecorator:PatientDecorator = InsurancePatientsRecordsImp()
     val allPatients = patientRepository.getAllPatients()
     val screens = Screen.values().toList()
     val navController by rememberNavController(Screen.HomeScreen.name)
@@ -48,7 +45,7 @@ fun App() {
                 Box(
                     modifier = Modifier.fillMaxHeight()
                 ) {
-                    CustomNavigationHost(navController = navController,patientRepository=patientRepository)
+                    CustomNavigationHost(navController = navController,patientRepository=patientRepository,patientDecorator=patientDecorator)
                 }
                 NavigationRail(
                     modifier = Modifier.align(Alignment.CenterStart).fillMaxHeight()
@@ -82,7 +79,7 @@ fun App() {
 
 @Composable
 fun CustomNavigationHost(
-    navController: NavController,patientRepository: PatientRepository
+    navController: NavController,patientRepository: PatientRepository,patientDecorator: PatientDecorator
 ) {
     NavigationHost(navController) {
         composable(Screen.HomeScreen.name) {
@@ -93,6 +90,10 @@ fun CustomNavigationHost(
             val patientsScreenState by patitentScreenController.patientsScreenState.collectAsState()
             val patients = patientsScreenState.patients
             PatientsScreen(navController = navController, patients = patients, addPatients = {patitentScreenController.addPatient(it)})
+        }
+
+        composable(Screen.InsuranceScreen.name){
+            InsuranceScreen(patientDecorator = patientDecorator)
         }
 
 
