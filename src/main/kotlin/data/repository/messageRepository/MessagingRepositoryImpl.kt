@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class MessagingRepositoryImpl(private val db: IHMSDatabase) : IMessagingRepository {
-    override suspend fun sendMessage(message: Message): Flow<Boolean> =flow {
+    override  fun sendMessage(message: Message): Message {
         db.messages.add(message)
-        emit(true)
+        return message
     }
 
     override  suspend fun getAllMessages(receiverId:String): Flow<List<Message>> = flow{

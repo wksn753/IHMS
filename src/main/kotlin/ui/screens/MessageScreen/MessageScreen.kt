@@ -38,19 +38,22 @@ fun MessagingScreen(
     onSendClick:() -> Unit,
     setCurrentReceiver:(User)->Unit,
     setCurrentUser:(User)->Unit,
-    navController: NavController
+    navController: NavController,
+    messageScreenUiState: MessagingScreenUiState,
+    setViewMessage:() -> Unit
 ){
     Box(modifier = modifier.fillMaxSize()){
         if (!hasUser){
             SelectSenderScreen(users = users,currentUser=currentUser, updateCurrentUser = setCurrentUser, updateHasUser = setHasUser)
         }else{
-            SendMessageScreen(users = users,currentUser=currentUser,currentMessageReceiver=currentMessageReceiver,messages=messages,setCurrentReceiver=setCurrentReceiver,message=message,onMessageChange=onMessageChange,onSendClick=onSendClick)
+            SendMessageScreen(users = users,currentUser=currentUser,currentMessageReceiver=currentMessageReceiver,messages=messages,setCurrentReceiver=setCurrentReceiver,message=message,onMessageChange=onMessageChange,onSendClick=onSendClick, messageScreenUiState = messageScreenUiState,setViewMessage)
         }
     }
 }
 
 @Composable
 fun SelectSenderScreen(users: List<User>, currentUser: User,updateCurrentUser:(User) -> Unit,updateHasUser:(Boolean)->Unit){
+
     Column(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colors.background), horizontalAlignment = Alignment.CenterHorizontally){
         Row(modifier = Modifier.fillMaxSize()){
             Column(modifier = Modifier.fillMaxWidth(0.45f).fillMaxHeight()){
@@ -73,7 +76,9 @@ fun SelectSenderScreen(users: List<User>, currentUser: User,updateCurrentUser:(U
     }
 }
 @Composable
-fun SendMessageScreen(users: List<User>, currentUser: User, currentMessageReceiver: User, messages: List<Message>,setCurrentReceiver: (User) -> Unit,message:String,onMessageChange: (String) -> Unit,onSendClick: () -> Unit){
+fun SendMessageScreen(users: List<User>, currentUser: User, currentMessageReceiver: User, messages: List<Message>,setCurrentReceiver: (User) -> Unit,message:String,onMessageChange: (String) -> Unit,onSendClick: () -> Unit,messageScreenUiState: MessagingScreenUiState,setViewMessage: () -> Unit){
+    var messageList by remember { mutableStateOf<List<Message>>(emptyList()) }
+    messageList=messageScreenUiState.messages
     Column(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colors.background)){
         Row(modifier = Modifier.fillMaxSize()){
             Column(modifier = Modifier.fillMaxSize(0.33f)){
@@ -98,7 +103,7 @@ fun SendMessageScreen(users: List<User>, currentUser: User, currentMessageReceiv
                     Text(text = "Messages", fontWeight = FontWeight.ExtraBold, fontSize = 14.sp)
                 }
                 LazyColumn(modifier = Modifier.fillMaxWidth().fillMaxHeight()){
-                    items(items = messages){
+                    items(items = messageList){
                         msg -> MessageItem(currentUser = currentUser, message = msg)
                     }
                 }
@@ -110,6 +115,9 @@ fun SendMessageScreen(users: List<User>, currentUser: User, currentMessageReceiv
                 Spacer(modifier = Modifier.height(10.dp))
                 Button(onClick = {onSendClick()}) {
                     Text(text = "Send", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                }
+                Button(onClick = setViewMessage){
+                    Text("View Messages")
                 }
             }
         }

@@ -1,9 +1,8 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,12 +30,18 @@ import kotlinx.coroutines.launch
 import ui.IHMSTheme
 import ui.navigation.rememberNavController
 import ui.screens.MessageScreen.MessageController
+import ui.screens.MessageScreen.MessageItem
 import ui.screens.MessageScreen.MessagingScreen
+import ui.screens.MessageScreen.MessagingScreenUiState
 import ui.screens.PatientsScreen.patientScreenController.PatientScreenController
 import ui.screens.UsersScreen.UserController
 import ui.screens.UsersScreen.UsersScreen
 import java.util.*
 
+@Composable
+fun Messages(messages:List<Message>,onClick:()->Unit){
+
+}
 @Composable
 @Preview
 fun App() {
@@ -101,8 +106,27 @@ fun CustomNavigationHost(
 
            val messageController = MessageController(messageRepository,userRepository)
             val messageScreenUiState by messageController.messageUiState.collectAsState()
+            var messageState = remember { mutableStateOf(MessagingScreenUiState(currentReceiver = User("","",UserRole.MEMBER), users = emptyList(), currentUser = User("","",UserRole.MEMBER), messages = emptyList()) ) }
             var hasUser by remember { mutableStateOf(false) }
-            MessagingScreen(navController = navController, users = messageScreenUiState.users, messages = emptyList(), currentUser = messageScreenUiState.currentUser, currentMessageReceiver = IHMSDatabase.getInstance().currentReceiver, hasUser = hasUser, setHasUser = {hasUser=it}, message = "", onMessageChange = {}, onSendClick = {}, setCurrentUser = {messageController.updateCurrentUser(it)}, setCurrentReceiver = {messageController.setCurrentReceiver(it)})
+            var viewMessages by remember { mutableStateOf(false) }
+            var message by remember { mutableStateOf("") }
+            val users =listOf(
+                User(id = UUID.randomUUID().toString(),username = "Wassanyi",role = UserRole.MEMBER),
+                User(id = UUID.randomUUID().toString(),username = "Kevin",role = UserRole.ADMIN),
+                User(id = UUID.randomUUID().toString(),username = "Stephen",role = UserRole.MEMBER))
+            var messageList by remember { mutableStateOf<List<Message>>(emptyList()) }
+
+            messageList=IHMSDatabase.getInstance().messages
+
+            MessagingScreen(navController = navController, users = messageScreenUiState.users, messages = messageList, currentUser = IHMSDatabase.getInstance().currentUser, currentMessageReceiver = IHMSDatabase.getInstance().currentReceiver, hasUser = hasUser, setHasUser = {hasUser=it}, message = message, onMessageChange = {message=it}, onSendClick = {messageController.sendMessage(message = message)}, setCurrentUser = {messageController.updateCurrentUser(it)}, setCurrentReceiver = {messageController.setCurrentReceiver(it)}, messageScreenUiState = messageScreenUiState, setViewMessage = {viewMessages=true})
+            if(messageList.isNotEmpty()) {
+                    messageList.forEach{
+                        msg -> MessageItem(currentUser = IHMSDatabase.getInstance().currentUser, message = msg)
+                    }
+            }
+
+
+
         }
         composable(Screen.HomeScreen.name) {
             HomeScreen(navController = navController)

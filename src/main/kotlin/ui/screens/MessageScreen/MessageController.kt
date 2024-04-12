@@ -14,12 +14,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ui.screens.UsersScreen.UserScreenUiState
+import utils.IHMSDatabase
 import java.util.UUID
 
 @OptIn(DelicateCoroutinesApi::class)
 class MessageController constructor(private val messageReopsitory: IMessagingRepository, private val userRepository:UserRepository) {
     private val _messageUiState = MutableStateFlow<MessageScreenUiState>(MessageScreenUiState(currentUser = User("","",UserRole.MEMBER), allMessages = emptyList(), specificInbox = emptyList(), sendTo =User("","",UserRole.MEMBER), allUsers = emptyList() ))
-    private val _messageScreenUiState = MutableStateFlow<MessagingScreenUiState>(MessagingScreenUiState(currentUser = User("","",UserRole.MEMBER), users = emptyList(), currentReceiver = User("","",UserRole.MEMBER)))
+    private val _messageScreenUiState = MutableStateFlow<MessagingScreenUiState>(MessagingScreenUiState(currentUser = User("","",UserRole.MEMBER), users = emptyList(), currentReceiver = User("","",UserRole.MEMBER), messages = emptyList()))
     val messageUiState
         get() = _messageScreenUiState.asStateFlow()
     init {
@@ -42,14 +43,13 @@ class MessageController constructor(private val messageReopsitory: IMessagingRep
 
     }
     fun sendMessage(message: String){
-        val currentUserId = userRepository.getCurrentUser().id
-        val currentReceiverId = messageReopsitory.getCurrentMessageReceiver().id
-        val msg = Message(UUID.randomUUID().toString(),currentUserId,currentReceiverId, message)
-        val scope = GlobalScope
-        scope.launch {
-            messageReopsitory.sendMessage(msg).collect{
-            }
+        val msg = Message(UUID.randomUUID().toString(),IHMSDatabase.getInstance().currentUser.id,IHMSDatabase.getInstance().currentReceiver.id, message)
+        val msg2=messageReopsitory.sendMessage(msg)
+        _messageScreenUiState.value = _messageScreenUiState.value.copy(messages = IHMSDatabase.getInstance().messages)
+        IHMSDatabase.getInstance().messages.forEach{
+            msg3 -> println("${msg3.senderId} ${msg3.message}")
         }
+
     }
 
 }
