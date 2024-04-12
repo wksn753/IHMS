@@ -1,9 +1,10 @@
 package data.repository.patientReopsitory
 
+import utils.IHMSDatabase
 import domain.model.Patient
 import domain.repository.patientReopsitory.PatientRepository
 
-class PatientRepositoryImpl constructor(private val db:IHMSDB): PatientRepository {
+class PatientRepositoryImpl constructor(private val db: IHMSDatabase): PatientRepository {
 
 
     override fun getAllPatients(): List<Patient> {
