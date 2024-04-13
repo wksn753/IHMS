@@ -40,11 +40,15 @@ import facade.BillingAndPatientsRecordsScreen
 import facade.BillingSystem
 import facade.HospitalInformationManager
 import facade.PatientRecordsSystem
-
-
+import data.repository.patientReopsitory.InsurancePatientsRecordsImp
+import domain.repository.patientReopsitory.PatientDecorator
+import ui.screens.Insurance.InsuranceScreen
 @Composable
 @Preview
 fun App() {
+
+  val patientDecorator:PatientDecorator = InsurancePatientsRecordsImp()
+    val allPatients = patientRepository.getAllPatients()
     val patientRepository: PatientRepository = PatientRepositoryImpl(IHMSDatabase.getInstance())
     val userRepository:UserRepository = UserRepositoryImpl(IHMSDatabase.getInstance())
     val messageRepository:IMessagingRepository = MessagingRepositoryImpl(IHMSDatabase.getInstance())
@@ -65,7 +69,8 @@ fun App() {
                 Box(
                     modifier = Modifier.fillMaxHeight().fillMaxWidth(0.91f).align(Alignment.CenterEnd)
                 ) {
-                    CustomNavigationHost(navController = navController,patientRepository=patientRepository,userFactory=userFactory, userRepository = userRepository, messageRepository = messageRepository)
+
+                    CustomNavigationHost(navController = navController,patientRepository=patientRepository,userFactory=userFactory, userRepository = userRepository, messageRepository = messageRepository,patientDecorator=patientDecorator)
                 }
                 NavigationRail(
                     modifier = Modifier.align(Alignment.CenterStart).fillMaxHeight()
@@ -99,7 +104,7 @@ fun App() {
 
 @Composable
 fun CustomNavigationHost(
-    navController: NavController,patientRepository: PatientRepository,userFactory: UserFactory,userRepository: UserRepository,messageRepository: IMessagingRepository
+    navController: NavController,patientRepository: PatientRepository,userFactory: UserFactory,userRepository: UserRepository,messageRepository: IMessagingRepository,patientDecorator: PatientDecorator
 ) {
     NavigationHost(navController) {
         composable(Screen.MessageScreen.name){
@@ -129,6 +134,9 @@ fun CustomNavigationHost(
                 billingSystem = BillingSystem(),
                 patientRecordsSystem = PatientRecordsSystem()
             ))
+        composable(Screen.InsuranceScreen.name){
+            InsuranceScreen(patientDecorator = patientDecorator)
+        }    
     }.build()
 }
 fun main() = application {
