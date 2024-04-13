@@ -8,4 +8,5 @@ interface PatientRepository {
     fun addPatient(patient: Patient)
     fun updatePatient(patient: Patient)
     fun deletePatient(id: String)
+
 }
