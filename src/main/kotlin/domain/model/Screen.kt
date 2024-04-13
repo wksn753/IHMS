@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.MailOutline
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.material.icons.filled.Create
 
 enum class Screen(
     val label: String,
@@ -28,5 +29,10 @@ enum class Screen(
         label = "Messages",
         icon = Icons.Outlined.MailOutline
     )
+
+    BillingAndRecords(
+        label = "Billing And Records",
+        icon = Icons.Filled.Create
+    ),
 
 }

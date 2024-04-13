@@ -36,6 +36,11 @@ import ui.screens.PatientsScreen.patientScreenController.PatientScreenController
 import ui.screens.UsersScreen.UserController
 import ui.screens.UsersScreen.UsersScreen
 import java.util.*
+import facade.BillingAndPatientsRecordsScreen
+import facade.BillingSystem
+import facade.HospitalInformationManager
+import facade.PatientRecordsSystem
+
 
 @Composable
 @Preview
@@ -119,6 +124,11 @@ fun CustomNavigationHost(
             val patients = patientsScreenState.patients
             PatientsScreen(navController = navController, patients = patients, addPatients = {patitentScreenController.addPatient(it)})
         }
+        composable(Screen.BillingAndRecords.name) {
+            BillingAndPatientsRecordsScreen(manager = HospitalInformationManager(
+                billingSystem = BillingSystem(),
+                patientRecordsSystem = PatientRecordsSystem()
+            ))
     }.build()
 }
 fun main() = application {
