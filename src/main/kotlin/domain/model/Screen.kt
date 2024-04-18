@@ -29,13 +29,11 @@ enum class Screen(
     MessageScreen(
         label = "Messages",
         icon = Icons.Outlined.MailOutline
-    )
-
+    ),
     BillingAndRecords(
         label = "Billing And Records",
         icon = Icons.Filled.Create
     ),
-
     InsuranceScreen(
         label="Insurance",
         icon = Icons.Default.Star
