@@ -11,6 +11,7 @@ import java.time.LocalDateTime
 
 class PatientScreenController constructor(private val patientRepository: PatientRepository) {
      private val _patientsScreenState:MutableStateFlow<PatientsScreenUiState> = MutableStateFlow<PatientsScreenUiState>(PatientsScreenUiState(patients = emptyList()))
+
      val patientsScreenState:StateFlow<PatientsScreenUiState>
          get() = _patientsScreenState.asStateFlow()
 
