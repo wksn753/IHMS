@@ -42,7 +42,11 @@ import facade.HospitalInformationManager
 import facade.PatientRecordsSystem
 import data.repository.patientReopsitory.InsurancePatientsRecordsImp
 import domain.repository.patientReopsitory.PatientDecorator
+import observer.MessagingSubject
+import observer.messagingRepo.MessagingSubjectImpl
 import ui.screens.Insurance.InsuranceScreen
+import ui.screens.MessageScreen.MessagingController
+
 @Composable
 @Preview
 fun App() {
@@ -107,11 +111,16 @@ fun CustomNavigationHost(
 ) {
     NavigationHost(navController) {
         composable(Screen.MessageScreen.name){
+            val messagingController = MessagingController()
+            val messagingSubject = MessagingSubjectImpl()
+            messagingSubject.attach(messagingController)
 
-           val messageController = MessageController(messageRepository,userRepository)
+            val messagingState by messagingController.messages.collectAsState()
+            val messageController = MessageController(messageRepository,userRepository)
             val messageScreenUiState by messageController.messageUiState.collectAsState()
             var hasUser by remember { mutableStateOf(false) }
-            MessagingScreen(navController = navController, users = messageScreenUiState.users, messages = emptyList(), currentUser = messageScreenUiState.currentUser, currentMessageReceiver = IHMSDatabase.getInstance().currentReceiver, hasUser = hasUser, setHasUser = {hasUser=it}, message = "", onMessageChange = {}, onSendClick = {}, setCurrentUser = {messageController.updateCurrentUser(it)}, setCurrentReceiver = {messageController.setCurrentReceiver(it)})
+            var currentMessage by remember { mutableStateOf("") }
+            MessagingScreen(navController = navController, users = messageScreenUiState.users, messages = messagingState, currentUser = IHMSDatabase.getInstance().currentUser, currentMessageReceiver = IHMSDatabase.getInstance().currentReceiver, hasUser = hasUser, setHasUser = {hasUser=it}, message = currentMessage, onMessageChange = {currentMessage=it}, onSendClick = {messagingSubject.addMessage(Message(messageId = UUID.randomUUID().toString(), senderId = IHMSDatabase.getInstance().currentUser.id, receiverId = IHMSDatabase.getInstance().currentReceiver.id, message = currentMessage))}, setCurrentUser = {messageController.updateCurrentUser(it)}, setCurrentReceiver = {messageController.setCurrentReceiver(it)})
         }
         composable(Screen.HomeScreen.name) {
             HomeScreen(navController = navController)
