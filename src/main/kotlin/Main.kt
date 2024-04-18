@@ -18,16 +18,13 @@ import androidx.compose.ui.Modifier
 import data.repository.messageRepository.MessagingRepositoryImpl
 import data.repository.patientReopsitory.PatientRepositoryImpl
 import data.repository.userRepository.UserRepositoryImpl
-import utils.IHMSDatabase
+import utils.singleton.IHMSDatabase
 import domain.model.Message
 import domain.model.Screen
-import domain.model.User
-import domain.model.UserRole
 import domain.repository.messagingRepository.IMessagingRepository
 import domain.repository.patientReopsitory.PatientRepository
 import domain.repository.patientReopsitory.UserFactory
 import domain.repository.userRepository.UserRepository
-import kotlinx.coroutines.launch
 import ui.IHMSTheme
 import ui.navigation.rememberNavController
 import ui.screens.MessageScreen.MessageController
@@ -42,7 +39,6 @@ import facade.HospitalInformationManager
 import facade.PatientRecordsSystem
 import data.repository.patientReopsitory.InsurancePatientsRecordsImp
 import domain.repository.patientReopsitory.PatientDecorator
-import observer.MessagingSubject
 import observer.messagingRepo.MessagingSubjectImpl
 import ui.screens.Insurance.InsuranceScreen
 import ui.screens.MessageScreen.MessagingController

@@ -1,6 +1,6 @@
 package data.repository.patientReopsitory
 
-import utils.IHMSDatabase
+import utils.singleton.IHMSDatabase
 import domain.model.Patient
 import domain.repository.patientReopsitory.PatientRepository
 

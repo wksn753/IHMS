@@ -1,4 +1,4 @@
-package utils;
+package utils.singleton;
 
 import domain.model.Message;
 import domain.model.Patient;
