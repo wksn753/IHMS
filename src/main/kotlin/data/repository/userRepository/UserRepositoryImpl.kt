@@ -1,6 +1,6 @@
 package data.repository.userRepository
 
-import utils.IHMSDatabase
+import utils.singleton.IHMSDatabase
 import domain.model.User
 import domain.repository.userRepository.UserRepository
 import kotlinx.coroutines.flow.Flow

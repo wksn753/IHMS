@@ -1,6 +1,6 @@
 package data.repository.messageRepository
 
-import utils.IHMSDatabase
+import utils.singleton.IHMSDatabase
 import domain.model.Message
 import domain.model.User
 import domain.repository.messagingRepository.IMessagingRepository
