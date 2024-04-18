@@ -48,7 +48,6 @@ import ui.screens.Insurance.InsuranceScreen
 fun App() {
 
   val patientDecorator:PatientDecorator = InsurancePatientsRecordsImp()
-    val allPatients = patientRepository.getAllPatients()
     val patientRepository: PatientRepository = PatientRepositoryImpl(IHMSDatabase.getInstance())
     val userRepository:UserRepository = UserRepositoryImpl(IHMSDatabase.getInstance())
     val messageRepository:IMessagingRepository = MessagingRepositoryImpl(IHMSDatabase.getInstance())
@@ -136,7 +135,8 @@ fun CustomNavigationHost(
             ))
         composable(Screen.InsuranceScreen.name){
             InsuranceScreen(patientDecorator = patientDecorator)
-        }    
+        }
+      }
     }.build()
 }
 fun main() = application {
