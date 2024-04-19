@@ -42,6 +42,7 @@ class UserController constructor(private val userRepositoryImpl: UserRepository,
     }
     fun addMember(name:String){
         val user = userFactory.createMember(name)
+
         userRepositoryImpl.addUser(user)
         val scope =GlobalScope
         scope.launch {

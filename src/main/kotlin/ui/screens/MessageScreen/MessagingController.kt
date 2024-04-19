@@ -12,5 +12,8 @@ class MessagingController :MessagingObserver{
         get() = _messages.asStateFlow()
     override fun update(messages: MutableList<Message>) {
         _messages.value = messages;
+        _messages.value.forEach {
+            msg -> println(msg.message)
+        }
     }
 }
