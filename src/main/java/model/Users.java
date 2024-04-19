@@ -2,14 +2,18 @@ package model;
 
 import domain.model.UserRole;
 
+import java.util.UUID;
+
 public class Users {
     private String name;
     private String email;
     private UserRole userRole;
+    private String id;
     public Users(String username, String email, UserRole userRole){
         this.name=username;
         this.email=email;
         this.userRole=userRole;
+        this.id= UUID.randomUUID().toString();
     }
 
     public void setName(String name) {
@@ -39,5 +43,13 @@ public class Users {
 
     public void setUserRole(UserRole userRole) {
         this.userRole = userRole;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

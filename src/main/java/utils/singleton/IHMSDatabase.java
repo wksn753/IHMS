@@ -15,14 +15,14 @@ public class IHMSDatabase {
     public List<User> users;
     public List<Users> usersMain;
     public List<Message> messages;
-    public User currentUser;
-    public User currentReceiver;
+    public Users currentUser;
+    public Users currentReceiver;
     public List<Patient> patients;
     private IHMSDatabase() {
         users= new ArrayList<>();
         messages = new ArrayList<>();
-        currentReceiver = new User("","", UserRole.MEMBER);
-        currentUser=new User("","", UserRole.MEMBER);
+        currentReceiver = new Users("","", UserRole.MEMBER);
+        currentUser=new Users("","", UserRole.MEMBER);
         patients= new ArrayList<>();
         usersMain = new ArrayList<>();
         users.add(new User("WASSANYI KEVIN", UUID.randomUUID().toString(), UserRole.MEMBER));

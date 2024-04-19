@@ -5,6 +5,7 @@ import domain.model.User
 import domain.model.UserRole
 import domain.repository.patientReopsitory.UserFactory
 import domain.repository.userRepository.UserRepository
+import factory.UserMainFactory
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,10 +13,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import model.Users
 
 @OptIn(DelicateCoroutinesApi::class)
-class UserController constructor(private val userRepositoryImpl: UserRepository, private val userFactory: UserFactory) {
-    private  val _userScreenState =  MutableStateFlow<UserScreenUiState>(UserScreenUiState(currentUser = User("","", role = UserRole.MEMBER), users = emptyList()))
+class UserController constructor(private val userRepositoryImpl: UserRepository, private val userFactory: UserMainFactory) {
+    private  val _userScreenState =  MutableStateFlow<UserScreenUiState>(UserScreenUiState(currentUser = Users("","",UserRole.MEMBER), users = emptyList()))
     val userScreenState:StateFlow<UserScreenUiState>
         get() = _userScreenState.asStateFlow()
 
@@ -30,7 +32,7 @@ class UserController constructor(private val userRepositoryImpl: UserRepository,
     }
 
     fun addAdmin(name:String){
-        val user = userFactory.createAdmin(name)
+        val user = userFactory.createUser(UserRole.ADMIN,name,"")
         userRepositoryImpl.addUser(user)
         val scope =GlobalScope
         scope.launch {
@@ -41,7 +43,7 @@ class UserController constructor(private val userRepositoryImpl: UserRepository,
 
     }
     fun addMember(name:String){
-        val user = userFactory.createMember(name)
+        val user = userFactory.createUser(UserRole.MEMBER,name,"")
 
         userRepositoryImpl.addUser(user)
         val scope =GlobalScope

@@ -6,6 +6,7 @@ import domain.model.User
 import domain.repository.messagingRepository.IMessagingRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import model.Users
 
 class MessagingRepositoryImpl(private val db: IHMSDatabase) : IMessagingRepository {
     override suspend fun sendMessage(message: Message): Flow<Boolean> =flow {
@@ -24,12 +25,12 @@ class MessagingRepositoryImpl(private val db: IHMSDatabase) : IMessagingReposito
         }
     }
 
-    override  fun setCurrentMessageReceiver(user:User):User{
+    override  fun setCurrentMessageReceiver(user:Users):Users{
         db.currentReceiver = user
         return db.currentReceiver
     }
 
-    override fun getCurrentMessageReceiver():User{
+    override fun getCurrentMessageReceiver(): Users {
         return  db.currentReceiver
     }
 }

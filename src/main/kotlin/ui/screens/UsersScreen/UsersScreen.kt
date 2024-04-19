@@ -21,14 +21,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import domain.model.User
 import domain.model.UserRole
+import model.Users
 import ui.IHMSTheme
 import ui.navigation.NavController
 
 @Composable
 fun UsersScreen(
     navController: NavController,
-    users: List<User>,
-    onUserClicked: (User) -> Unit,
+    users: List<Users>,
+    onUserClicked: (Users) -> Unit,
     modifier: Modifier=Modifier,
     addUser:(String)->Unit,
     addAdmin:(String)->Unit
@@ -68,15 +69,15 @@ fun UsersScreen(
 }
 
 @Composable
-fun UserRow(modifier: Modifier=Modifier,index:Int,user: User){
+fun UserRow(modifier: Modifier=Modifier,index:Int,user: Users){
     Row(modifier = Modifier.fillMaxWidth().background(color = if(isEven(index)) Color.Gray else Color.DarkGray), horizontalArrangement = Arrangement.SpaceBetween) {
         Column() {
-            Icon(Icons.Outlined.AccountCircle,user.username, tint = Color.White)
+            Icon(Icons.Outlined.AccountCircle,user.name, tint = Color.White)
         }
         Column {
-            Text(text= user.username.uppercase(), fontWeight = FontWeight.Light, color = Color.White)
+            Text(text= user.name.uppercase(), fontWeight = FontWeight.Light, color = Color.White)
         }
-        Column { Text(text = user.role.name, fontWeight = FontWeight.Light, color = Color.White) }
+        Column { Text(text = user.userRole.name, fontWeight = FontWeight.Light, color = Color.White) }
     }
 }
 
@@ -88,12 +89,12 @@ fun isEven(number: Int): Boolean {
 @Composable
 fun UsersScreenPreview() {
     IHMSTheme {
-        val users = listOf(
-            User(id = "1", username = "John", role = UserRole.ADMIN),
-            User(id = "2", username = "Mary",role = UserRole.ADMIN),
-            User(id = "3", username = "Peter",role = UserRole.ADMIN),
-            User(id = "4", username = "Jane",role = UserRole.ADMIN)
-        )
-        UsersScreen(users = users, onUserClicked = {}, addUser = {},addAdmin={}, navController = NavController(""))
+//        val users = listOf(
+//            Users(id = "1", username = "John", role = UserRole.ADMIN),
+//            User(id = "2", username = "Mary",role = UserRole.ADMIN),
+//            User(id = "3", username = "Peter",role = UserRole.ADMIN),
+//            User(id = "4", username = "Jane",role = UserRole.ADMIN)
+//        )
+//        UsersScreen(users = users, onUserClicked = {}, addUser = {},addAdmin={}, navController = NavController(""))
     }
 }

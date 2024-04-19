@@ -13,13 +13,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import model.Users
 import ui.screens.UsersScreen.UserScreenUiState
+import utils.singleton.IHMSDatabase
 import java.util.UUID
 
 @OptIn(DelicateCoroutinesApi::class)
 class MessageController constructor(private val messageReopsitory: IMessagingRepository, private val userRepository:UserRepository) {
-    private val _messageUiState = MutableStateFlow<MessageScreenUiState>(MessageScreenUiState(currentUser = User("","",UserRole.MEMBER), allMessages = emptyList(), specificInbox = emptyList(), sendTo =User("","",UserRole.MEMBER), allUsers = emptyList() ))
-    private val _messageScreenUiState = MutableStateFlow<MessagingScreenUiState>(MessagingScreenUiState(currentUser = User("","",UserRole.MEMBER), users = emptyList(), currentReceiver = User("","",UserRole.MEMBER)))
+    private val _messageUiState = MutableStateFlow<MessageScreenUiState>(MessageScreenUiState(currentUser = Users("","",UserRole.MEMBER), allMessages = emptyList(), specificInbox = emptyList(), sendTo =Users("","",UserRole.MEMBER), allUsers = emptyList() ))
+    private val _messageScreenUiState = MutableStateFlow<MessagingScreenUiState>(MessagingScreenUiState(currentUser = Users("","",UserRole.MEMBER), users = emptyList(), currentReceiver = Users("","",UserRole.MEMBER)))
     val messageUiState
         get() = _messageScreenUiState.asStateFlow()
     init {
@@ -31,14 +33,14 @@ class MessageController constructor(private val messageReopsitory: IMessagingRep
         }
     }
 
-    fun updateCurrentUser(user: User){
+    fun updateCurrentUser(user: Users){
         userRepository.setCurrentUser(user)
-        _messageScreenUiState.update { state -> state.copy(currentUser = User("Wk","",UserRole.MEMBER)) }
-        println(_messageScreenUiState.value.currentUser.username)
+        _messageScreenUiState.update { state -> state.copy(currentUser = Users("Wk","",UserRole.MEMBER)) }
+        println(_messageScreenUiState.value.currentUser.name)
     }
-    fun setCurrentReceiver(receiver:User){
+    fun setCurrentReceiver(receiver:Users){
         messageReopsitory.setCurrentMessageReceiver(receiver)
-        _messageScreenUiState.update { state -> state.copy(currentReceiver = messageReopsitory.getCurrentMessageReceiver()) }
+        _messageScreenUiState.update { state -> state.copy(currentReceiver = IHMSDatabase.getInstance().currentReceiver) }
 
     }
     fun sendMessage(message: String){

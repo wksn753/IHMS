@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import domain.model.Message
 import domain.model.User
 import domain.model.UserRole
+import model.Users
 import ui.IHMSTheme
 import ui.navigation.NavController
 import java.util.UUID
@@ -27,17 +28,17 @@ import java.util.UUID
 @Composable
 fun MessagingScreen(
     modifier: Modifier=Modifier,
-    users:List<User>,
+    users:List<Users>,
     messages:List<Message>,
-    currentUser: User,
-    currentMessageReceiver:User,
+    currentUser: Users,
+    currentMessageReceiver:Users,
     hasUser:Boolean,
     setHasUser:(Boolean)->Unit,
     message:String,
     onMessageChange:(String)->Unit,
     onSendClick:() -> Unit,
-    setCurrentReceiver:(User)->Unit,
-    setCurrentUser:(User)->Unit,
+    setCurrentReceiver:(Users)->Unit,
+    setCurrentUser:(Users)->Unit,
     navController: NavController
 ){
     Box(modifier = modifier.fillMaxSize()){
@@ -50,7 +51,7 @@ fun MessagingScreen(
 }
 
 @Composable
-fun SelectSenderScreen(users: List<User>, currentUser: User,updateCurrentUser:(User) -> Unit,updateHasUser:(Boolean)->Unit){
+fun SelectSenderScreen(users: List<Users>, currentUser: Users,updateCurrentUser:(Users) -> Unit,updateHasUser:(Boolean)->Unit){
     Column(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colors.background), horizontalAlignment = Alignment.CenterHorizontally){
         Row(modifier = Modifier.fillMaxSize()){
             Column(modifier = Modifier.fillMaxWidth(0.45f).fillMaxHeight()){
@@ -63,7 +64,7 @@ fun SelectSenderScreen(users: List<User>, currentUser: User,updateCurrentUser:(U
             }
             Column(modifier = Modifier){
                 Text("Current Message Sender", fontSize = 16.sp, fontWeight = FontWeight.ExtraBold)
-                Text(text = currentUser.username, fontSize = 14.sp, fontWeight = FontWeight.ExtraLight)
+                Text(text = currentUser.name, fontSize = 14.sp, fontWeight = FontWeight.ExtraLight)
                 Spacer(modifier = Modifier.height(10.dp))
                 Button(onClick = {updateHasUser(true)}){
                     Text(text = "Continue", fontSize = 14.sp, fontWeight = FontWeight.Bold)
@@ -73,7 +74,7 @@ fun SelectSenderScreen(users: List<User>, currentUser: User,updateCurrentUser:(U
     }
 }
 @Composable
-fun SendMessageScreen(users: List<User>, currentUser: User, currentMessageReceiver: User, messages: List<Message>,setCurrentReceiver: (User) -> Unit,message:String,onMessageChange: (String) -> Unit,onSendClick: () -> Unit){
+fun SendMessageScreen(users: List<Users>, currentUser: Users, currentMessageReceiver: Users, messages: List<Message>,setCurrentReceiver: (Users) -> Unit,message:String,onMessageChange: (String) -> Unit,onSendClick: () -> Unit){
     Column(modifier = Modifier.fillMaxSize().background(color = MaterialTheme.colors.background)){
         Row(modifier = Modifier.fillMaxSize()){
             Column(modifier = Modifier.fillMaxSize(0.33f)){
@@ -90,9 +91,9 @@ fun SendMessageScreen(users: List<User>, currentUser: User, currentMessageReceiv
                 Text(text = "Chats", fontWeight = FontWeight.ExtraBold, fontSize = 14.sp)
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(text = "Current User", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                Text(currentUser.username,fontWeight = FontWeight.ExtraLight, fontSize = 14.sp)
+                Text(currentUser.name,fontWeight = FontWeight.ExtraLight, fontSize = 14.sp)
                 Text(text = "Receiver", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                Text(currentMessageReceiver.username,fontWeight = FontWeight.ExtraLight, fontSize = 14.sp)
+                Text(currentMessageReceiver.name,fontWeight = FontWeight.ExtraLight, fontSize = 14.sp)
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
                     Text(text = "Messages", fontWeight = FontWeight.ExtraBold, fontSize = 14.sp)
@@ -117,21 +118,21 @@ fun SendMessageScreen(users: List<User>, currentUser: User, currentMessageReceiv
 
 }
 @Composable
-fun UserItem(modifier: Modifier=Modifier,user: User,onUserClick: (User) -> Unit){
+fun UserItem(modifier: Modifier=Modifier,user: Users,onUserClick: (Users) -> Unit){
     Card(modifier = modifier.fillMaxWidth(0.96f).clickable { onUserClick(user) })
     {
         Row(modifier = Modifier.fillMaxWidth(0.96f).background(color = MaterialTheme.colors.surface).clip(RoundedCornerShape(12.dp),
         ), verticalAlignment = Alignment.CenterVertically){
-            Icon(Icons.Outlined.AccountCircle, contentDescription = user.username,)
-            Text(modifier = Modifier.padding(16.dp),text = user.username.uppercase(), fontSize = 14.sp, fontWeight = FontWeight.Bold)
+            Icon(Icons.Outlined.AccountCircle, contentDescription = user.name,)
+            Text(modifier = Modifier.padding(16.dp),text = user.name.uppercase(), fontSize = 14.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.width(5.dp))
-            Text(modifier = Modifier.padding(16.dp),text = "${user.role}", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+            Text(modifier = Modifier.padding(16.dp),text = "${user.userRole}", fontSize = 14.sp, fontWeight = FontWeight.Bold)
         }
     }
     Spacer(modifier = Modifier.height(5.dp))
 }
 @Composable
-fun MessageItem(modifier: Modifier=Modifier,message: Message,currentUser: User){
+fun MessageItem(modifier: Modifier=Modifier,message: Message,currentUser: Users){
     val isFromCurrentUser = (message.senderId==currentUser.id)
     Spacer(modifier = Modifier.height(2.dp))
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = if (isFromCurrentUser)Arrangement.End else Arrangement.Start){
@@ -161,6 +162,6 @@ fun MessagingScreenPreview() {
             Message(messageId = UUID.randomUUID().toString(),senderId = users[0].id,receiverId = users[1].id,message = "Hello"))
 //        SelectSenderScreen(users = users, currentUser = currentUser, updateCurrentUser = {currentUser=it}, updateHasUser = {})
 //        SendMessageScreen(users = users, currentUser = users[0], messages = messages, currentMessageReceiver = users[1], setCurrentReceiver = {}, message = "", onMessageChange = {}, onSendClick = {})
-        MessageItem(message = messages[0], currentUser = users[0])
+//        MessageItem(message = messages[0], currentUser = users[0])
     }
 }

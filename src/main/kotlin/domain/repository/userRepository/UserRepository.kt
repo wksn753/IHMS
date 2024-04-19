@@ -2,12 +2,12 @@ package domain.repository.userRepository
 
 import domain.model.User
 import kotlinx.coroutines.flow.Flow
+import model.Users
 
 interface UserRepository {
-    fun addUser(user: User)
-    fun getAllUsers(): Flow<List<User>>
-    fun getUserById(id: String): Flow<User>
+    fun addUser(user: Users)
+    fun getAllUsers(): Flow<List<Users>>
 
-    fun  setCurrentUser(user: User):User
-    fun getCurrentUser(): User
+    fun  setCurrentUser(user: Users):Users
+    fun getCurrentUser(): Users
 }

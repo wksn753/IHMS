@@ -5,30 +5,27 @@ import domain.model.User
 import domain.repository.userRepository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import model.Users
 
 class UserRepositoryImpl constructor(private val db: IHMSDatabase): UserRepository {
-    override fun addUser(user: User) {
-        db.users.add(user)
+    override fun addUser(user: Users) {
+        db.usersMain.add(user)
     }
 
-    override fun getAllUsers(): Flow<List<User>> = flow {
-        val users = db.users.toList().also {
+    override fun getAllUsers(): Flow<List<Users>> = flow {
+        val users = db.usersMain.toList().also {
             emit(it)
         }
     }
 
-    override fun getUserById(id: String): Flow<User> =flow{
-        val users = db.users.filter { user -> user.id == id }
-        val user = users[0]
-        emit(user)
-    }
 
-    override fun setCurrentUser(user: User):User {
+
+    override fun setCurrentUser(user: Users):Users {
         db.currentUser=user
         return db.currentUser
     }
 
-    override fun getCurrentUser():User{
+    override fun getCurrentUser():Users{
         return db.currentUser
     }
 

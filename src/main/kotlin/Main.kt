@@ -39,6 +39,7 @@ import facade.HospitalInformationManager
 import facade.PatientRecordsSystem
 import data.repository.patientReopsitory.InsurancePatientsRecordsImp
 import domain.repository.patientReopsitory.PatientDecorator
+import factory.UserMainFactory
 import observer.messagingRepo.MessagingSubjectImpl
 import ui.screens.Insurance.InsuranceScreen
 import ui.screens.MessageScreen.MessagingController
@@ -52,7 +53,7 @@ fun App() {
     val userRepository:UserRepository = UserRepositoryImpl(IHMSDatabase.getInstance())
     val messageRepository:IMessagingRepository = MessagingRepositoryImpl(IHMSDatabase.getInstance())
     val screens = Screen.entries.toList()
-    val userFactory = UserFactory()
+    val userFactory = UserMainFactory()
     val navController by rememberNavController(Screen.HomeScreen.name)
     val currentScreen by remember {
         navController.currentScreen
@@ -103,7 +104,7 @@ fun App() {
 
 @Composable
 fun CustomNavigationHost(
-    navController: NavController,patientRepository: PatientRepository,userFactory: UserFactory,userRepository: UserRepository,messageRepository: IMessagingRepository,patientDecorator: PatientDecorator
+    navController: NavController,patientRepository: PatientRepository,userFactory: UserMainFactory,userRepository: UserRepository,messageRepository: IMessagingRepository,patientDecorator: PatientDecorator
 ) {
     NavigationHost(navController) {
         composable(Screen.MessageScreen.name){
